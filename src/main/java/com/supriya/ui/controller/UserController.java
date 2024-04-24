@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.supriya.ui.model.response.UserRest;
+
 @RestController
 @RequestMapping("/users")// https://localhost:8080/users
 public class UserController {
@@ -16,14 +18,20 @@ public class UserController {
 	@GetMapping
 	public String getUser(@RequestParam(value="page", defaultValue="1") int page,
 			@RequestParam(value="limit", defaultValue="50") int limit,
-			@RequestParam(value="sort", required = false) String sort)
+			@RequestParam(value="sort",defaultValue="desc", required = false) String sort)
 	{
 		return "get user was called with page = " + page + " and limit = " + limit + " and sort = " + sort;
 	}
 	
 	@GetMapping(path="/{userId}")
-	public String getUser(@PathVariable("userId") String userId) {
-		return "get user was called with userId = " + userId;
+	public UserRest getUser(@PathVariable("userId") String userId) {
+		UserRest returnValue = new UserRest();
+		returnValue.setEmail("supriyaroy@gmail.com");
+		returnValue.setFirstName("Supriya");
+		returnValue.setLastName("Roy");
+		
+		return returnValue;
+		
 	}
 	
 	@PostMapping
