@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.supriya.ui.model.request.UserDetailsRequestModel;
 import com.supriya.ui.model.response.UserRest;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/users") // https://localhost:8080/users
 public class UserController {
@@ -47,9 +49,9 @@ public class UserController {
 					MediaType.APPLICATION_JSON_VALUE 
 			} ,produces = {
 					MediaType.APPLICATION_XML_VALUE,
-					MediaType.APPLICATION_JSON_VALUE 
+					MediaType.APPLICATION_JSON_VALUE
 			} )
-	public ResponseEntity<UserRest> createUser(@RequestBody UserDetailsRequestModel userDetails) {
+	public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails) {
 		UserRest returnValue = new UserRest();
 		returnValue.setEmail(userDetails.getEmail());
 		returnValue.setFirstName(userDetails.getFirstName());
