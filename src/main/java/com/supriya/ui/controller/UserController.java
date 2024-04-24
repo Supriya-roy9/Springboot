@@ -1,6 +1,8 @@
 package com.supriya.ui.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,17 +25,18 @@ public class UserController {
 		return "get user was called with page = " + page + " and limit = " + limit + " and sort = " + sort;
 	}
 
-	@GetMapping(path = "/{userId}", produces = {
-			MediaType.APPLICATION_XML_VALUE,
-			MediaType.APPLICATION_JSON_VALUE 
-			})
-	public UserRest getUser(@PathVariable("userId") String userId) {
+	@GetMapping(path = "/{userId}",
+			produces = {
+					MediaType.APPLICATION_XML_VALUE,
+					MediaType.APPLICATION_JSON_VALUE 
+			} )
+	public ResponseEntity<UserRest> getUser(@PathVariable("userId") String userId) {
 		UserRest returnValue = new UserRest();
 		returnValue.setEmail("supriyaroy@gmail.com");
 		returnValue.setFirstName("Supriya");
 		returnValue.setLastName("Roy");
 
-		return returnValue;
+		return new ResponseEntity<UserRest>(returnValue,HttpStatus.OK);
 
 	}
 
