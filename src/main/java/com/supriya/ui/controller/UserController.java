@@ -1,5 +1,9 @@
 package com.supriya.ui.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +25,8 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/users") // https://localhost:8080/users
 public class UserController {
+	
+	Map<String, UserRest> users;
 
 	@GetMapping
 	public String getUser(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -34,14 +40,14 @@ public class UserController {
 					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE 
 			} )
-	public ResponseEntity<UserRest> getUser(@PathVariable("userId") String userId) {
-		UserRest returnValue = new UserRest();
-		returnValue.setEmail("supriyaroy@gmail.com");
-		returnValue.setFirstName("Supriya");
-		returnValue.setLastName("Roy");
-
-		return new ResponseEntity<UserRest>(returnValue,HttpStatus.OK);
-
+	public ResponseEntity<UserRest> getUser(@PathVariable("userId") String userId) 
+	{
+		if(users.containsKey(userId)) 
+		{
+			return new ResponseEntity<>(users.get(userId),HttpStatus.OK);
+		} else {
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
 	}
 
 	@PostMapping(consumes = {
@@ -51,11 +57,18 @@ public class UserController {
 					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE
 			} )
-	public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails) {
+	public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails) 
+	{
 		UserRest returnValue = new UserRest();
 		returnValue.setEmail(userDetails.getEmail());
 		returnValue.setFirstName(userDetails.getFirstName());
 		returnValue.setLastName(userDetails.getLastName());
+		
+		String userId = UUID.randomUUID().toString();
+		returnValue.setUserId(userId);
+		
+		if(users == null) users = new HashMap<>();
+		users.put(userId, returnValue);
 
 		return new ResponseEntity<UserRest>(returnValue,HttpStatus.OK);	
 		}
