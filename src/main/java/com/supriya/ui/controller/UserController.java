@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.supriya.ui.model.request.UpdateUserDetailsRequestModel;
 import com.supriya.ui.model.request.UserDetailsRequestModel;
 import com.supriya.ui.model.response.UserRest;
 
@@ -73,9 +74,21 @@ public class UserController {
 		return new ResponseEntity<UserRest>(returnValue,HttpStatus.OK);	
 		}
 
-	@PutMapping
-	public String updateUser() {
-		return "update user was called";
+	@PutMapping(path = "/{userId}",consumes = {
+			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE 
+	} ,produces = {
+			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE
+	} )
+	public UserRest updateUser(@PathVariable("userId") String userId,@Valid @RequestBody UpdateUserDetailsRequestModel userDetails) {
+		UserRest storeUserDetails = users.get(userId);
+		storeUserDetails.setFirstName(userDetails.getFirstName());
+		storeUserDetails.setLastName(userDetails.getLastName());
+		
+		users.put(userId, storeUserDetails);
+		
+		return storeUserDetails;
 	}
 
 	@DeleteMapping
